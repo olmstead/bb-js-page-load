@@ -44,138 +44,97 @@
     <!-- Any section element inside of this container is displayed as a slide -->
     <div class="slides">
         <section>
-            <h1>Javascript Scope</h1>
-            <h3>What you see is what you get</h3>
+            <h1>Javascript Page Load Events</h1>
+            <h3>what happens when</h3>
             <p>
                 <small>Brown bag by <a href="mailto:john.olmstead@trizic.com">John
                     Olmstead</a> <a href="http://trizic.com">@trizic
                     .com</a></small>
             </p>
         </section>
-
         <section>
-            <h2>Scope is the set of variables you have access to</h2>
-            <a href="http://www.w3schools.com/js/js_scope.asp">w3schools.com/js/js_scope</a>
-            <p>
-                ... or what you see is what you get.
-            </p>
-        </section>
+        <blockquote>“The early bird gets the worm, but the second mouse gets the cheese.”</blockquote>
 
-        <!-- Example of nested vertical slides -->
-        <section>
-            <section>
-                <p>What scopes are available in Javascript?</p>
-                <a href="#" class="navigate-down">
-                    <img width="238" height="238"
-                         data-src="http://www.clker.com/cliparts/i/X/D/N/j/p/icon-with-question-mark-hi.png"
-                         alt="Down arrow">
-                </a>
-            </section>
-            <section>
-                <p>Prior to ES6 there were only two scopes:</p>
-                <ul style="list-style-type: none">
-                    <li><h1>local<span class="fragment"
-                                       style="display:inline;text-transform: lowercase"> (function)</span>
-                    </h1></li>
-                    <li><h1>global</h1></li>
-                </ul>
-            </section>
+        ― Willie Nelson
         </section>
         <section>
-            <h2>Reference Scoping Rules</h2>
-            <p><span class="fragment highlight-green">declared with var</span>:
-                &nbsp;&nbsp;containing function or global</p>
-
-					<pre><code class="hljs" data-trim contenteditable>
-var global = ‘everyone can see me;
-function ( ) {
-    var functionScope = ‘only this functinon can see me’;
-    anotherGlobal = ‘trouble’;
+            <h2><span style="text-transform: none">load</span>  event</h2>
+            <p>The load event is fired when a resource and its dependent resources have finished loading.</p>
+            <pre><code class="hljs" data-trim contenteditable>
+function doLoad() {
+    alert( "The load event is executing" );
 }
-                    </code></pre>
-            <p class="fragment"><span class="fragment highlight-red">declared without var:</span>
-                global </p>
-            <span class="fragment">Never declare without var!<br/>This is enforced via linting in our Javascript pipeline.</span>
-        </section>
-        <section>
-            <section>
-                <h1>Global Scope</h1>
-                <h4>How should it be used?</h4>
-                <ul style="list-style-type: none">
-                    <li class="fragment">Use the global scope to create module
-                        namespaces.
-                    </li>
-                    <li class="fragment"><span class="fragment highlight-red">Never create variables or functions in global.</span>
-                    </li>
-                </ul>
-            </section>
-        </section>
 
-        <section>
-            <h2>Global Namespaces</h2>
-            <p>Always check for an existing module first.</p>
-					<pre><code class="hljs" data-trim contenteditable>
-var trizic = trizic || { };
-var trizic.user = ( function( user ){
-    var exports = user || {}
-    var privateVar = ‘private to module’;
-
-    exports.get = function( ) {
-        return privateVar;
-    }
-    return exports;
-}( trizic.user ) );
-                    </code></pre>
-            <p class="fragment">CommonJS, browserify or web pack will take care
-                or creating and managing modules for you.</p>
-        </section>
-
-        <section>
-            <h2>Inline Code: sometimes a necessary evil</h2>
-            <p>Put it in function scope via a closure, declare with var.</p>
-            <pre><code class="hljs" data-trim contenteditable>
-(function( $ ) {
-    var functionScope = 'happiness';
-    global = ‘sadness’;
-})( );
+if ( window.addEventListener ) {
+    window.addEventListener( "load", doLoad, false );
+} else if ( window.attachEvent ) {
+    window.attachEvent( "onload", doLoad );
+} else if ( window.onLoad ) {
+    window.onload = doLoad;
+}
             </code></pre>
-        </section>
-        <section>
-            <h2>Scope in ES6</h2>
-            <p>With ES6, you can also now limit scope to a block with let.  However, ES6 is not fully supported in browsers..</p>
-            <pre><code class="hljs" data-trim contenteditable>
-var x = 1;
-{
-    console.log(x);
-    let x = 10;
-};
-            </code></pre>
-            <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let"/>https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let</a>
+            <a href='http://docs.webplatform.org/wiki/dom/Element/load'>webplatform.org/wiki/dom/Element/load</a>
         </section>
 
         <section>
-            <h2>Exceptions to the Rule</h2>
-            <p>Global queues for third party libraries</p>
-            <pre><code class="hljs" data-trim contenteditable>
- var _gaq = _gaq || [];
-            </code></pre>
+            <h2><span style="text-transform: none">DOMContentLoaded</span> event</h2>
+            <p>Fired when the initial HTML document has been completely loaded and parsed, without waiting for other resources.</p>
+            <img style="height: 250px" src="domloaded.png"/>
+            <p>In most cases, the script can be run as soon as the DOM hierarchy has been fully constructed</p>
+            <a href="http://docs.webplatform.org/wiki/dom/Event/DOMContentLoaded">webplatform.org/wiki/dom/Event/DOMContentLoaded</a>
         </section>
 
+
         <section>
-            <h2>3rd Party Globals</h2>
-            <p>Beware of 3rd party libraries that use common globals like <span style="color: red">$</span></p>
-            <p>Guard agains multiple definitions using a closure import.</p>
+            <h2><span style="text-transform: none">jQuery ready</span> method</h2>
+            <p>Execute a function when the DOM is fully loaded..</p>
             <pre><code class="hljs" data-trim contenteditable>
-( function( $ ) {
-    console.info( $ === jQuery ) ;  // true
-}( jQuery ) );
+$( document ).ready( handler )
+$().ready( handler ) (this is not recommended)
+$( handler )
             </code></pre>
-            <p>With jQuery, you can call $.conflict(), after which $ is not available. $ can be passed to the event handler.</p>
- <pre><code class="hljs" data-trim contenteditable>
-jQuery( document ).ready(function( $ ) {
-    // Code using $ as usual goes here.
-});
+            <a href="http://api.jquery.com/ready/">jquery.com/ready/</a>
+        </section>
+        <section>
+            <p>Is DOMContentLoaded event EXACTLY the same as jQuery's .ready() function?</p>
+            <ul>
+                <li class="fragment">The real event can support any document.</li>
+                <li class="fragment">jQuery will fire the event asynchronously even if the event has already happened.</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Deferred <span style="text-transform: none">vs</span> Async</h2>
+            <ul>
+                <li><span style="color: orange">async:</span> script is completely independent, parallelizes load</li>
+<pre><code class="hljs" data-trim contenteditable>
+    <script src="indepenendent.js" async></script>
 </code></pre>
+                <li><span style="color: orange">defer:</span> script relies or is relied upon by another script (better to use jQuery ready or equiv)</li>
+                <pre><code class="hljs" data-trim contenteditable>
+<script src="demo_async.js" defer></script>
+                </code></pre>
+                <li><span style="color: orange">inline:</span> small, safe and is something relied upon by an async script: Google analytics, UI binding</li>
+                <pre><code class="hljs" data-trim contenteditable>
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-XXXXX-X']);
+                </code></pre>
+            </ul>
+        </section>
+        <section>
+            <h2>Inline Javascript?</h2>
+            <p>Put at bottom of page: analytics, page pings.</p>
+            <p>Use a queue/buffer while rendering on the server or inline.</p>
+        </section>
+        <section>
+            <h2>Chrome Tools</h2>
+            <p>
+                <h4>network tab</h4>
+                <a href="http://developer.chrome.com/devtools/docs/network">chrome.com/devtools/docs/network</a>
+            </p>
+            <p>
+                <h4>timeline panel</h4>
+                <a href="http://developer.chrome.com/devtools/docs/timeline">chrome.com/devtools/docs/timeline</a>
+            </p>
         </section>
 
         <section>
@@ -192,7 +151,7 @@ jQuery( document ).ready(function( $ ) {
 <script>
 
     // Full list of configuration options available at:
-    // https://github.com/hakimel/reveal.js#configuration
+    // http://github.com/hakimel/reveal.js#configuration
     Reveal.initialize({
         controls: true,
         progress: true,
